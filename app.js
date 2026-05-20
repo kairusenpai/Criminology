@@ -76,7 +76,6 @@ function startQuiz() {
         return;
     }
 
-    const questionCount = parseInt(document.getElementById('questionCount').value);
     const situationalOnly = document.getElementById('situationalOnly').checked;
 
     // Check for saved progress
@@ -104,8 +103,8 @@ function startQuiz() {
         questions = questions.filter(q => q.isSituational);
     }
 
-    // Shuffle and select questions
-    questions = shuffleArray(questions).slice(0, Math.min(questionCount, questions.length));
+    // Shuffle all questions
+    questions = shuffleArray(questions);
 
     if (questions.length === 0) {
         alert('No questions available for the selected criteria');
@@ -168,10 +167,10 @@ function loadQuestion() {
     currentQuiz.submitted = false;
     document.getElementById('feedback').classList.remove('show', 'correct', 'incorrect');
 
-    // Hide previous button initially
+    // Hide previous button always (no going back after answering)
     const prevBtn = document.getElementById('prevBtn');
     if (prevBtn) {
-        prevBtn.style.display = currentQuiz.currentIndex > 0 ? 'inline-block' : 'none';
+        prevBtn.style.display = 'none';
     }
 }
 
