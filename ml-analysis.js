@@ -305,7 +305,7 @@ class PerformanceAnalyzer {
         const metrics = this.getAllSubjectMetrics();
         const subjects = getAllSubjects();
         
-        if (Object.keys(metrics).length < 3) {
+        if (Object.keys(metrics).length < 4) {
             return {
                 ready: false,
                 confidence: 'low',
@@ -314,22 +314,26 @@ class PerformanceAnalyzer {
             };
         }
 
-        let totalScore = 0;
-        let subjectCount = 0;
+        let weightedScore = 0;
+        let totalWeight = 0;
         let minScore = 100;
 
-        Object.values(metrics).forEach(metric => {
-            totalScore += metric.averageScore;
-            subjectCount++;
+        subjects.forEach(subject => {
+            const metric = metrics[subject.key];
+            if (!metric) return;
+            const weight = subject.boardWeight || (100 / subjects.length);
+            weightedScore += metric.averageScore * weight;
+            totalWeight += weight;
             if (metric.averageScore < minScore) minScore = metric.averageScore;
         });
 
-        const averageScore = totalScore / subjectCount;
+        const averageScore = totalWeight > 0 ? weightedScore / totalWeight : 0;
+        const subjectCount = Object.keys(metrics).length;
         const ready = averageScore >= 75 && minScore >= 65;
 
         return {
             ready: ready,
-            confidence: subjectCount >= 5 ? 'high' : 'medium',
+            confidence: subjectCount >= 6 ? 'high' : subjectCount >= 4 ? 'medium' : 'low',
             message: ready 
                 ? 'You show good readiness for the board exam. Continue practicing to maintain your level.'
                 : `Focus on improving your weakest subjects. Your average is ${averageScore.toFixed(1)}%. Target 75%+ across all subjects.`,

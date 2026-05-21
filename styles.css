@@ -535,6 +535,31 @@ header p {
     color: #a0a0a0;
 }
 
+.board-weight {
+    color: #e94560;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.subject-topics {
+    margin: 12px 0 16px;
+    padding-left: 20px;
+    color: #c8c8c8;
+    font-size: 0.9rem;
+}
+
+.subject-topics li {
+    margin-bottom: 4px;
+}
+
+.question-topic {
+    display: block;
+    font-size: 0.85rem;
+    color: #e94560;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
 @media (max-width: 768px) {
     header h1 {
         font-size: 1.8rem;

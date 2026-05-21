@@ -55,7 +55,7 @@ function loadSubjectSelection() {
     container.innerHTML = subjects.map(subject => `
         <button class="subject-btn" data-subject="${subject.key}">
             <strong>${subject.name}</strong>
-            <small>${subject.questions.length} questions</small>
+            <small>${subject.boardWeight || ''}${subject.boardWeight ? '% board weight · ' : ''}${subject.questions.length} questions</small>
         </button>
     `).join('');
 
@@ -138,9 +138,10 @@ function loadQuestion() {
         `Question ${currentQuiz.currentIndex + 1} of ${currentQuiz.questions.length}`;
 
     // Display question
-    document.getElementById('questionText').textContent = question.question;
+    const topicLabel = question.topic ? `<span class="question-topic">${question.topic}</span>` : '';
+    document.getElementById('questionText').innerHTML = `${topicLabel}${question.question}`;
 
-    // Display scenario image if situational
+    // Display scenario banner if situational
     const imageContainer = document.getElementById('questionImage');
     if (question.isSituational) {
         imageContainer.innerHTML = `<strong>📋 Situational Problem</strong><br>Read the scenario carefully before answering.`;
@@ -520,10 +521,13 @@ function loadSubjectsList() {
     
     container.innerHTML = subjects.map(subject => {
         const situationalCount = subject.questions.filter(q => q.isSituational).length;
+        const topicsList = (subject.topics || []).map(t => `<li>${t}</li>`).join('');
         return `
             <div class="subject-detail-card">
                 <h3>${subject.name}</h3>
+                <p class="board-weight">Board exam weight: ${subject.boardWeight || '—'}%</p>
                 <p>${subject.description}</p>
+                ${topicsList ? `<ul class="subject-topics">${topicsList}</ul>` : ''}
                 <div class="subject-stats">
                     <div class="subject-stat">
                         <span>${subject.questions.length}</span>
